@@ -15,22 +15,23 @@ def check_internet_connection():
     except OSError:
         return False
 
-
 def run_program():
-    """Run the student's program using subprocess and return the output."""
-
-    # Run the student's program and capture output
-    result = subprocess.run(
-        ['python3', 'pretty_json.py'],  # Adjust this command if using a different Python version or path
-        text=True,
-        capture_output=True,
-        check=True  # If check is True and the exit code was non-zero, it raises a
-        # CalledProcessError. The CalledProcessError object will have the return code
-        # in the returncode attribute, and output & stderr attributes if those streams
-        # were captured.
-    )
-
-    return result.stdout  # Capture standard output
+    """Run the student's program using subprocess and return the output or error."""
+    try:
+        # Run the student's program and capture output
+        result = subprocess.run(
+            ['python3', 'pretty_json.py'],  # Adjust this command if using a different Python version or path
+            text=True,
+            capture_output=True,
+            check=True  # If check is True and the exit code was non-zero, it raises a CalledProcessError
+        )
+        return result.stdout  # Capture standard output
+    except subprocess.CalledProcessError as e:
+        # Return the error message specific to CalledProcessError
+        return f"CalledProcessError: {e.stderr}"
+    except Exception as e:
+        # Catch any other unexpected errors and return their message
+        return f"An unexpected error occurred: {str(e)}"
 
 
 def logic_adjectives_output():
